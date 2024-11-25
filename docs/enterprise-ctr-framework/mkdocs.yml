@@ -1,0 +1,41 @@
+site_name: Enterprise Container Framework
+site_url: https://ecf.self-hosted.io
+theme: readthedocs
+markdown_extensions: 
+    - admonition
+    - codehilite
+    - attr_list
+nav:
+    - Home: index.md
+    - Reference Images: images/image-overview.md
+    - Base OS Images:
+          - Overview: base-os/base-os.md
+          - Release Notes:
+            - Base: 
+              - 1.0.0: base-os/releases/base_1_0_0.md
+    - CICD Images:
+          - Overview: cicd/builda.md
+          - Release Notes:
+            - Builda:
+              - 1.0.0: cicd/releases/builda_1_0_0.md
+    - Python Images: 
+          - Overview: python/python.md
+          - Release Notes:
+            - Python 3.10:
+              - 1.0.0: python/releases/python310_1_0_0.md
+              - 1.0.1: python/releases/python310_1_0_1.md
+            - Python 3.11:
+              - 1.0.0: python/releases/python311_1_0_0.md
+            - Python 3.12:
+              - 1.0.0: python/releases/python312_1_0_0.md
+    - Java Images: 
+          - Overview: java/java.md
+          - Release Notes:
+            - Java 11:
+                - 1.0.0: java/releases/java11_1_0_0.md
+            - Java 17:
+                - 1.0.0: java/releases/java17_1_0_0.md
+            - Java 21:
+                - 1.0.0: java/releases/java21_1_0_0.md
+    
+

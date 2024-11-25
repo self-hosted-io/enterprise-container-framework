@@ -1,0 +1,8 @@
+schema_version: 1
+
+name: trust
+version: "1.0.0"
+description: This module ensures that the base OS has items like ca-certificates, etc.
+
+execute:
+  - script: trust.sh

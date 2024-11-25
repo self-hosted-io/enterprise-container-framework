@@ -1,0 +1,15 @@
+name: mbern/base-os
+version: 1.0.0
+from: "rockylinux/rockylinux:9.4"
+modules:
+  repositories:
+    - path: ../../modules
+  install:
+    - name: core-updates
+    - name: trust
+packages:
+  manager: dnf
+envs:
+  # This var is used to tag change events, accepts multiple values separated with ","
+  - name: tags
+    value: "base-os"

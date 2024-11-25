@@ -1,0 +1,529 @@
+name: Build and Test Docker Images for Feature Branches
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build_base_os:
+    name: Build & Test & Publish Base OS Image
+    runs-on: [self-hosted, linux]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Install dependencies
+      run: pip3 install -r modules/pip-dev-tools/build-requirements.txt 
+
+    - name: Perform dockerhub login
+      run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
+    
+    - name: Build Base OS Docker Image
+      run: bash -x scripts/build-release-image.sh images/base-os/
+
+    # - name: Run Trivy vulnerability scanner
+    #   uses: aquasecurity/trivy-action@0.28.0
+    #   with:
+    #     image-ref: 'mbern/base-os:latest'
+    #     format: 'table'
+    #     exit-code: '1'
+    #     ignore-unfixed: 'true'
+    #     vuln-type: 'os,library'
+    #     severity: 'CRITICAL,HIGH'
+
+    - name: Push Docker Image
+      run: bash -x scripts/push-image.sh images/base-os/
+
+    - name: Cleanup
+      run: bash -x scripts/cleanup.sh
+  
+  build_builda:
+    name: Build & Test & Publish Builda Image
+    runs-on: [self-hosted, linux]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Install dependencies
+      run: pip3 install -r modules/pip-dev-tools/build-requirements.txt 
+
+    - name: Perform dockerhub login
+      run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
+    
+    - name: Build Builda Docker Image
+      run: bash -x scripts/build-release-image.sh images/builda/
+
+    # - name: Run Trivy vulnerability scanner
+    #   uses: aquasecurity/trivy-action@0.28.0
+    #   with:
+    #     image-ref: 'mbern/builda:latest'
+    #     format: 'table'
+    #     exit-code: '1'
+    #     ignore-unfixed: 'true'
+    #     vuln-type: 'os,library'
+    #     severity: 'CRITICAL,HIGH'
+
+    - name: Push Docker Image
+      run: bash -x scripts/push-image.sh images/builda/
+  
+  build_python_310:
+    name: Build & Test & Publish Python 3.10 Docker Image
+    runs-on: [self-hosted, linux]
+
+    services:
+      redis:
+        image: redis:alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Install dependencies
+      run: pip3 install -r modules/pip-dev-tools/build-requirements.txt 
+
+    - name: Get Docker Info / Versions
+      run: docker info
+
+    - name: Check Running Containers
+      run: docker ps
+
+    - name: Perform dockerhub login
+      run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
+    
+    - name: Build Python 3.10 Docker Image
+      run: bash -x scripts/build-release-image.sh images/python-ent-3.10/
+
+    - name: Integration Test Suite
+      run: bash -x scripts/run-integration-tests.sh mbern/python-ent-3.10:latest
+
+    # - name: Run Trivy vulnerability scanner
+    #   uses: aquasecurity/trivy-action@0.28.0
+    #   with:
+    #     image-ref: 'mbern/python-ent-3.10:latest'
+    #     format: 'table'
+    #     exit-code: '1'
+    #     ignore-unfixed: 'true'
+    #     vuln-type: 'os,library'
+    #     severity: 'CRITICAL,HIGH'
+
+    - name: Push Docker Image
+      run: bash -x scripts/push-image.sh images/python-ent-3.10/
+
+  build_python_311:
+    name: Build & Test & Publish Python 3.11 Docker Image
+    runs-on: [self-hosted, linux]
+
+    services:
+      redis:
+        image: redis:alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Install dependencies
+      run: pip3 install -r modules/pip-dev-tools/build-requirements.txt 
+
+    - name: Get Docker Info / Versions
+      run: docker info
+
+    - name: Check Running Containers
+      run: docker ps
+
+    - name: Perform dockerhub login
+      run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
+    
+    - name: Build Python 3.11 Docker Image
+      run: bash -x scripts/build-release-image.sh images/python-ent-3.11/
+
+    - name: Integration Test Suite
+      run: bash -x scripts/run-integration-tests.sh mbern/python-ent-3.11:latest
+
+    # - name: Run Trivy vulnerability scanner
+    #   uses: aquasecurity/trivy-action@0.28.0
+    #   with:
+    #     image-ref: 'mbern/python-ent-3.11:latest'
+    #     format: 'table'
+    #     exit-code: '1'
+    #     ignore-unfixed: 'true'
+    #     vuln-type: 'os,library'
+    #     severity: 'CRITICAL,HIGH'
+
+    - name: Push Docker Image
+      run: bash -x scripts/push-image.sh images/python-ent-3.11/
+
+  build_python_312:
+    name: Build & Test & Publish Python 3.12 Docker Image
+    runs-on: [self-hosted, linux]
+
+    services:
+      redis:
+        image: redis:alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Install dependencies
+      run: pip3 install -r modules/pip-dev-tools/build-requirements.txt 
+
+    - name: Get Docker Info / Versions
+      run: docker info
+
+    - name: Check Running Containers
+      run: docker ps
+
+    - name: Perform dockerhub login
+      run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
+    
+    - name: Build Python 3.12 Docker Image
+      run: bash -x scripts/build-release-image.sh images/python-ent-3.12/
+
+    - name: Integration Test Suite
+      run: bash -x scripts/run-integration-tests.sh mbern/python-ent-3.12:latest
+
+    # - name: Run Trivy vulnerability scanner
+    #   uses: aquasecurity/trivy-action@0.28.0
+    #   with:
+    #     image-ref: 'mbern/python-ent-3.12:latest'
+    #     format: 'table'
+    #     exit-code: '1'
+    #     ignore-unfixed: 'true'
+    #     vuln-type: 'os,library'
+    #     severity: 'CRITICAL,HIGH'
+
+    - name: Push Docker Image
+      run: bash -x scripts/push-image.sh images/python-ent-3.12/
+
+  # build_python_313:
+  #   name: Build & Test & Publish Python 3.13 Docker Image
+  #   runs-on: [self-hosted, linux]
+
+  #   services:
+  #     redis:
+  #       image: redis:alpine
+  #       options: >-
+  #         --health-cmd "redis-cli ping"
+  #         --health-interval 10s
+  #         --health-timeout 5s
+  #         --health-retries 5
+  #       ports:
+  #         - 6379:6379
+
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v2
+    
+  #   - name: Install dependencies
+  #     run: pip3 install -r modules/pip-dev-tools/build-requirements.txt 
+
+  #   - name: Get Docker Info / Versions
+  #     run: docker info
+
+  #   - name: Check Running Containers
+  #     run: docker ps
+
+  #   - name: Perform dockerhub login
+  #     run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
+    
+  #   - name: Build Python 3.13 Docker Image
+  #     run: bash -x scripts/build-release-image.sh images/python-ent-3.13/
+
+  #   - name: Integration Test Suite
+  #     run: bash -x scripts/run-integration-tests.sh mbern/python-ent-3.13:latest
+
+    # - name: Run Trivy vulnerability scanner
+    #   uses: aquasecurity/trivy-action@0.28.0
+    #   with:
+    #     image-ref: 'mbern/python-ent-3.13:latest'
+    #     format: 'table'
+    #     exit-code: '1'
+    #     ignore-unfixed: 'true'
+    #     vuln-type: 'os,library'
+    #     severity: 'CRITICAL,HIGH'
+
+    # - name: Push Docker Image
+    #   run: bash -x scripts/push-image.sh images/python-ent-3.13/
+
+  build_python_lambda_python310:
+    name: Build & Test & Publish Python Lambda 3.10 Docker Image
+    runs-on: [self-hosted, linux]
+
+    services:
+      redis:
+        image: redis:alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Install dependencies
+      run: pip3 install -r modules/pip-dev-tools/build-requirements.txt
+
+    - name: Get Docker Info / Versions
+      run: docker info
+
+    - name: Check Running Containers
+      run: docker ps
+
+    - name: Perform dockerhub login
+      run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
+    
+    - name: Build Python Lambda 3.10 Docker Image
+      run: bash -x scripts/build-release-image.sh images/python-ent-lambda-3.10/
+
+    # - name: Integration Test Suite
+    #   run: bash -x scripts/run-integration-tests.sh mbern/python-ent-lambda-3.10:latest
+
+    # - name: Run Trivy vulnerability scanner
+    #   uses: aquasecurity/trivy-action@0.28.0
+    #   with:
+    #     image-ref: 'mbern/python-ent-lambda-3.10:latest'
+    #     format: 'table'
+    #     exit-code: '1'
+    #     ignore-unfixed: 'true'
+    #     vuln-type: 'os,library'
+    #     severity: 'CRITICAL,HIGH'
+
+    - name: Push Docker Image
+      run: bash -x scripts/push-image.sh images/python-ent-lambda-3.10/
+
+  build_python_lambda_python311:
+    name: Build & Test & Publish Python Lambda 3.11 Docker Image
+    runs-on: [self-hosted, linux]
+
+    services:
+      redis:
+        image: redis:alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Install dependencies
+      run: pip3 install -r modules/pip-dev-tools/build-requirements.txt
+
+    - name: Get Docker Info / Versions
+      run: docker info
+
+    - name: Check Running Containers
+      run: docker ps
+
+    - name: Perform dockerhub login
+      run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
+    
+    - name: Build Python Lambda 3.11 Docker Image
+      run: bash -x scripts/build-release-image.sh images/python-ent-lambda-3.11/
+
+    # - name: Integration Test Suite
+    #   run: bash -x scripts/run-integration-tests.sh mbern/python-ent-lambda-3.11:latest
+
+    # - name: Run Trivy vulnerability scanner
+    #   uses: aquasecurity/trivy-action@0.28.0
+    #   with:
+    #     image-ref: 'mbern/python-ent-lambda-3.11:latest'
+    #     format: 'table'
+    #     exit-code: '1'
+    #     ignore-unfixed: 'true'
+    #     vuln-type: 'os,library'
+    #     severity: 'CRITICAL,HIGH'
+
+    - name: Push Docker Image
+      run: bash -x scripts/push-image.sh images/python-ent-lambda-3.11/
+  
+  build_python_lambda_python312:
+    name: Build & Test & Publish Python Lambda 3.12 Docker Image
+    runs-on: [self-hosted, linux]
+
+    services:
+      redis:
+        image: redis:alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Install dependencies
+      run: pip3 install -r modules/pip-dev-tools/build-requirements.txt
+
+    - name: Get Docker Info / Versions
+      run: docker info
+
+    - name: Check Running Containers
+      run: docker ps
+
+    - name: Perform dockerhub login
+      run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
+    
+    - name: Build Python Lambda 3.12 Docker Image
+      run: bash -x scripts/build-release-image.sh images/python-ent-lambda-3.12/
+
+    # - name: Integration Test Suite
+    #   run: bash -x scripts/run-integration-tests.sh mbern/python-ent-lambda-3.12:latest
+
+    # - name: Run Trivy vulnerability scanner
+    #   uses: aquasecurity/trivy-action@0.28.0
+    #   with:
+    #     image-ref: 'mbern/python-ent-lambda-3.12:latest'
+    #     format: 'table'
+    #     exit-code: '1'
+    #     ignore-unfixed: 'true'
+    #     vuln-type: 'os,library'
+    #     severity: 'CRITICAL,HIGH'
+
+    - name: Push Docker Image
+      run: bash -x scripts/push-image.sh images/python-ent-lambda-3.12/
+  
+  build_docs:
+    name: Build & Test & Publish Docs Image
+    runs-on: [self-hosted, linux]
+    environment: dev
+    needs: [build_base_os, build_builda]
+
+    # need to run a tags build since no cekit: https://stackoverflow.com/questions/58177786/get-the-current-pushed-tag-in-github-actions
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Perform dockerhub login
+      run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
+    
+    - name: Build Docs Docker Image
+      run: docker build -f docs/enterprise-ctr-framework/Dockerfile -t mbern/ecf:${{ github.sha }} docs/enterprise-ctr-framework/
+
+    # - name: Run Trivy vulnerability scanner
+    #   uses: aquasecurity/trivy-action@0.28.0
+    #   with:
+    #     image-ref: 'mbern/ecf:latest'
+    #     format: 'table'
+    #     exit-code: '1'
+    #     ignore-unfixed: 'true'
+    #     vuln-type: 'os,library'
+    #     severity: 'CRITICAL,HIGH'
+
+    - name: Push Docker Image
+      run: docker push mbern/ecf:${{ github.sha }}
+
+    - name: Render deployment files with ansible
+      run: cd docs/enterprise-ctr-framework/deployment/ && ansible-playbook ansible-render.yml
+      env: 
+        INGRESS_HOST: ${{ vars.INGRESS_HOST }}
+        VERSION: ${{ github.sha }}
+
+
+    # get kubectl cluster-info
+    - name: Get cluster info
+      uses: actions-hub/kubectl@v1.31.2
+      env:
+        KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      with:
+        args: cluster-info
+
+    - name: Deploy Docs
+      uses: actions-hub/kubectl@v1.31.2
+      env:
+        KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        NAMESPACE: ${{ vars.namespace }}
+        VERSION: ${{ github.sha }}
+      with:
+        args: --namespace ${{ vars.namespace }} apply -f docs/enterprise-ctr-framework/deployment/tmp/
+
+  build_onboarder_api:
+    name: Build & Test & Publish Onboarder API Image
+    runs-on: [self-hosted, linux]
+    environment: dev
+    needs: [build_docs]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Perform dockerhub login
+      run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
+    
+    - name: Build Onboarder API Docker Image
+      run: docker build -f reference_apps/onboarder_github_fastapi/Dockerfile -t mbern/onboarder:${{ github.sha }} reference_apps/onboarder_github_fastapi/
+
+    # - name: Run Trivy vulnerability scanner
+    #   uses: aquasecurity/trivy-action@0.28.0
+    #   with:
+    #     image-ref: 'mbern/onboarder:latest'
+    #     format: 'table'
+    #     exit-code: '1'
+    #     ignore-unfixed: 'true'
+    #     vuln-type: 'os,library'
+    #     severity: 'CRITICAL,HIGH'
+
+    - name: Push Docker Image
+      run: docker push mbern/onboarder:${{ github.sha }}
+
+    - name: Render deployment files with ansible
+      run: cd reference_apps/onboarder_github_fastapi/deployments/ && ansible-playbook ansible-render.yml
+      env: 
+        ONBOARER_INGRESS_HOST: ${{ vars.ONBOARDER_INGRESS_HOST }}
+        REPO_CREATOR_TOKEN: ${{ secrets.REPO_CREATOR_TOKEN }}
+        VERSION: ${{ github.sha }}
+
+    - name: Get cluster info
+      uses: actions-hub/kubectl@v1.31.2
+      env:
+        KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      with:
+        args: cluster-info
+
+    - name: Deploy Onboarder API
+      uses: actions-hub/kubectl@v1.31.2
+      env:
+        KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        NAMESPACE: ${{ vars.namespace }}
+      with:
+        args: --namespace ${{ vars.namespace }} apply -f reference_apps/onboarder_github_fastapi/deployments/tmp/

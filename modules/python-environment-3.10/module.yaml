@@ -1,0 +1,9 @@
+schema_version: 1
+
+name: python-environment-3.10
+version: "1.0"
+
+envs:
+  - name: PYTHON_VERSION
+    value: 3.10.15
+

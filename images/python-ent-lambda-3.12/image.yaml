@@ -1,0 +1,25 @@
+name: mbern/python-ent-lambda-3.12
+version: 1.0.0
+from: "mbern/base-os:1.0.0"
+modules:
+  repositories:
+    - path: ../../modules
+  install:
+    - name: core-updates
+    - name: python-environment-3.12
+    - name: runtime-deps
+    - name: python
+    - name: pip
+    - name: runtime-deps-lambda
+    - name: aliases
+    - name: appuser
+    - name: lambda-workdir
+    #- name: dumb-init
+    #- name: entrypoint
+packages:
+  manager: dnf
+envs:
+  # This var is used to tag change events, accepts multiple values separated with ","
+  - name: tags
+    value: "python-3.12"
+

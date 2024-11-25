@@ -1,0 +1,13 @@
+# ignore target directory
+target/
+*target/
+
+# ignore all .pyc files
+*.pyc
+*.pyo
+*__pycache__/
+
+# ignore any site folder
+site/
+*site/
+

@@ -1,0 +1,13 @@
+schema_version: 1
+
+name: devtools
+version: "1.0.0"
+description: This module ensure installs pip
+
+execute:
+  - script: devtools.sh
+  - script: install-maven.sh
+
+envs:
+  - name: MAVEN_VERSION
+    value: 3.9.9

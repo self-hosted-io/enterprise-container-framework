@@ -1,0 +1,8 @@
+schema_version: 1
+
+name: core-updates
+version: "1.0.0"
+description: This module ensures that the base OS image is up to date
+
+execute:
+  - script: update.sh

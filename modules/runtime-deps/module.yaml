@@ -1,0 +1,10 @@
+schema_version: 1
+
+name: runtime-deps
+version: "1.0.0"
+
+packages:
+  install:
+    - tzdata
+    - ca-certificates
+    - which

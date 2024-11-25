@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onboarder
+  labels:
+    app: onboarder
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: onboarder
+  template:
+    metadata:
+      labels:
+        app: onboarder
+    spec:
+      containers:
+      - name: nginx
+        image: mbern/onboarder:{{ lookup('env', 'VERSION') }}
+        env:
+        - name: REDIS_HOST
+          value: redis
+        - name: REDIS_PORT
+          value: "6379"
+        - name: GITHUB_REPO_CREATOR_TOKEN
+          # from secret
+          valueFrom:
+            secretKeyRef:
+              name: github-token
+              key: token
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 8080

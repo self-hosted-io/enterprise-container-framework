@@ -1,0 +1,8 @@
+schema_version: 1
+
+name: aliases
+version: "1.0.0"
+description: This module ensures that the aliases are set up correctly for the python environment
+
+execute:
+  - script: alias.sh

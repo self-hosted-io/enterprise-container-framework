@@ -1,0 +1,11 @@
+pyyaml
+yq
+behave
+python-docker
+docker-squash
+cekit
+lxml
+pytest
+mkdocs
+ansible-lint
+ansible

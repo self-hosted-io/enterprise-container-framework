@@ -1,0 +1,25 @@
+schema_version: 1
+
+name: lambda-workdir
+version: "1.0.0"
+description: This module installs the entrypoint systems
+
+# artifacts:
+#   - name: entrypoint
+#     target: entrypoint.sh
+#     dest: /opt/app_env/
+#     path: entrypoint.sh
+
+run:
+  workdir: "/opt/app_env/"
+  #cmd:
+  #  - python3
+  #entrypoint: ["/usr/local/bin/dumb-init", "--", /bin/bash, /opt/app_env/entrypoint.sh]
+  user: appuser
+
+envs:
+  # This var is used to tag change events, accepts multiple values separated with ","
+  - name: PATH
+    value: "~/.local/bin:/opt/app_env/:/usr/local/bin:$PATH"
+  - name: PYTHONPATH
+    value: "/opt/app_env/:$PYTHONPATH"

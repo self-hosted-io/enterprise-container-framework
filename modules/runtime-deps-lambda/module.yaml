@@ -1,0 +1,20 @@
+schema_version: 1
+
+name: runtime-deps-lambda
+version: "1.0.0"
+description: This module installs pip development tools for builda
+
+artifacts:
+  - name: lambda
+    target: lambda-requirements.txt
+    dest: /
+    path: lambda-requirements.txt
+
+execute:
+  - script: lambda-runtime-install.sh
+
+# envs:
+#   - name: LANG
+#     value: C.UTF-8
+#   - name: AWSLAMBDARIC_VERSION
+#     value: 3.0.0 # renovate: datasource=github-releases depName=pypa/pip versioning=loose

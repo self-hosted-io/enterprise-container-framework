@@ -1,0 +1,8 @@
+schema_version: 1
+
+name: appuser
+version: "1.0.0"
+description: This module installs a generic user for running the application
+
+execute:
+  - script: appuser.sh

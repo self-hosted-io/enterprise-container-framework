@@ -1,0 +1,8 @@
+schema_version: 1
+
+name: pythondev
+version: "1.0.0"
+description: This module installs various python versions for CICD purposes, its loose and not recommended for production
+
+execute:
+  - script: pythondev.sh

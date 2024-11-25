@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecf
+  labels:
+    app: ecf
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ecf
+  template:
+    metadata:
+      labels:
+        app: ecf
+    spec:
+      containers:
+      - name: nginx
+        image: mbern/ecf:{{ lookup('env', 'VERSION') }}
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 80

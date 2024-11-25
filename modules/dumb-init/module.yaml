@@ -1,0 +1,12 @@
+schema_version: 1
+
+name: dumb-init
+version: "1.0.0"
+description: This module installs dumb-init
+
+execute:
+  - script: install-dumb-init.sh
+
+envs:
+  - name: DUMB_INIT_VERSION
+    value: 1.2.5

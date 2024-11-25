@@ -1,0 +1,20 @@
+schema_version: 1
+
+name: pipdevtools
+version: "1.0.0"
+description: This module installs pip development tools for builda
+
+artifacts:
+  - name: entrypoint
+    target: build-requirements.txt
+    dest: /
+    path: build-requirements.txt
+
+execute:
+  - script: pipdevel.sh
+
+envs:
+  - name: LANG
+    value: C.UTF-8
+  - name: PYTHON_PIP_VERSION
+    value: 24.2 # renovate: datasource=github-releases depName=pypa/pip versioning=loose

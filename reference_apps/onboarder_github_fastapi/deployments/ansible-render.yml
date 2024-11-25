@@ -1,0 +1,24 @@
+---
+- name: Render K8S Deployment Manifests
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Clean tmp dir
+      ansible.builtin.file:
+        # set path to current directory
+        path: ${{ playbook_dir }}/tmp/
+        state: absent
+
+    - name: Create tmp dir
+      ansible.builtin.file:
+        path: "{{ playbook_dir }}/tmp"
+        state: directory
+        mode: '0755'
+
+    - name: Render files template
+      ansible.builtin.template:
+        src: "{{ item }}"
+        dest: "{{ playbook_dir }}/tmp/{{ item | basename }}"
+        mode: '0644'
+      with_fileglob: "{{ playbook_dir }}/*.yaml"

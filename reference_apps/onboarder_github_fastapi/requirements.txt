@@ -1,0 +1,7 @@
+fastapi[all]
+requests
+pydantic
+pydantic-settings
+uvicorn
+PyGithub
+redis
